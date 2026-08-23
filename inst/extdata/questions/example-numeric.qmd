@@ -1,0 +1,13 @@
+## Calculate a total
+
+```{r example-numeric-calculate, echo=FALSE}
+q_example_numeric_answer <- 6 * 7
+```
+
+What is six multiplied by seven?
+
+**Answer:** `r quiz_numeric(q_example_numeric_answer)`
+
+::: unilur-solution
+Multiplication gives **`r q_example_numeric_answer`**.
+:::

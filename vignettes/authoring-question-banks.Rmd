@@ -1,0 +1,131 @@
+---
+title: "Authoring and validating question banks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Authoring and validating question banks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## The index schema
+
+The index is a UTF-8 CSV with one row per question and seven required columns:
+
+| Column | Meaning |
+|---|---|
+| `id` | Stable, unique identifier used for selection and variable prefixes |
+| `file` | Absolute path or, preferably, a path relative to the index |
+| `title` | Human-readable catalogue title |
+| `topic` | Filterable topic label |
+| `difficulty` | Filterable difficulty label such as `easy` or `hard` |
+| `marks` | Positive numerical mark value |
+| `type` | One of `numerical`, `shortanswer`, `singlechoice`, or `multichoice` |
+
+Additional columns are allowed and are carried into
+`selected-questions.csv`. This makes it possible to add features such as week,
+learning outcome, source dataset, author, or review status without changing the
+package.
+
+Relative paths make a bank portable. For example:
+
+```csv
+id,file,title,topic,difficulty,marks,type
+joins-01,questions/joins/joins-01.qmd,Choose a join,Joins,easy,1,singlechoice
+```
+
+## The fragment contract
+
+Each `.qmd` or `.Rmd` fragment must:
+
+1. contain no YAML front matter;
+2. have exactly one H2 (`##`) question heading;
+3. have exactly one complete `::: unilur-solution` block;
+4. use R chunk labels that are unique across the entire bank;
+5. prefix question variables with `q_<question_id>_`, replacing hyphens in the
+   ID with underscores; and
+6. call the helper corresponding to the indexed `type`.
+
+A numerical fragment looks like this:
+
+````markdown
+## Calculate a total
+
+```{r arithmetic-01-calculate, echo=FALSE}
+q_arithmetic_01_answer <- 6 * 7
+```
+
+What is six multiplied by seven?
+
+**Answer:** `r paste0(intToUtf8(96), "r quiz_numeric(q_arithmetic_01_answer)", intToUtf8(96))`
+
+::: unilur-solution
+Multiplication gives **`r paste0(intToUtf8(96), "r q_arithmetic_01_answer", intToUtf8(96))`**.
+:::
+````
+
+Do not put YAML in fragments. `build_quiz()` creates complete wrapper documents
+and supplies their YAML metadata.
+
+## Answer helpers
+
+Use exactly one of these families for the indexed type:
+
+```{r eval = FALSE}
+quiz_numeric(answer = 42, tolerance = 0)
+quiz_shortanswer(answer = "left_join")
+quiz_singlechoice(
+  answer = "left_join",
+  options = c("inner_join", "left_join", "anti_join")
+)
+quiz_multichoice(
+  answer = c("filter", "select"),
+  options = c("filter", "select", "lm", "hist")
+)
+```
+
+The helpers adapt to the output target. Student HTML receives empty input
+controls, teacher HTML marks correct responses, PDFs receive printable fields
+or symbols, and Moodle receives cloze grading syntax. Do not call
+`moodlequiz::cloze()` directly in a fragment, because doing so would make the
+student and teacher versions inconsistent.
+
+For single-choice questions, `answer` should equal exactly one entry in
+`options`. For multiple-choice questions, every answer should appear in
+`options`. Keep options as character vectors so that labels render predictably.
+
+## Add a question step by step
+
+1. Choose a stable ID. Avoid renaming it after quizzes have used it.
+2. Add a `.qmd` fragment below `questions/`.
+3. Give every R chunk a bank-wide unique label.
+4. Prefix temporary variables using the ID rule.
+5. Use the matching answer helper.
+6. Add a worked solution block.
+7. Add the index row, including its relative file path and metadata.
+8. Run `validate_question_bank(index_file)`.
+9. Run a quick source build with `render = FALSE`.
+10. Render and review both student and teacher versions before publishing.
+
+## What validation catches
+
+`validate_question_bank()` checks the full catalogue for missing or blank
+metadata, duplicate IDs, invalid marks, unsupported types, missing files,
+front matter in fragments, missing or repeated H2 headings and solution blocks,
+duplicate chunk labels, incorrect variable prefixes, direct cloze calls, and a
+mismatch between the indexed type and answer helper.
+
+Validation is structural. It cannot decide whether a question is pedagogically
+clear or whether its answer is factually correct. Peer review and rendered
+teacher-version review remain essential.
+
+## Version-control recommendations
+
+Commit the index and fragments. Usually ignore generated wrappers and rendered
+outputs, or publish reviewed outputs as release artifacts. Record the version
+of any data package or external source used to calculate answers. Review index
+changes as carefully as code because changing marks, type, or file mappings can
+change an assessment.

@@ -1,0 +1,14 @@
+## Select data frame verbs
+
+```{r example-multichoice-options, echo=FALSE}
+q_example_multichoice_options <- c("filter", "select", "lm", "hist")
+q_example_multichoice_answer <- c("filter", "select")
+```
+
+Which names are dplyr verbs used to subset a data frame? Select all that apply.
+
+**Answer:** `r quiz_multichoice(q_example_multichoice_answer, q_example_multichoice_options)`
+
+::: unilur-solution
+`filter()` subsets rows and `select()` subsets columns.
+:::

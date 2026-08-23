@@ -1,0 +1,5 @@
+id,file,title,topic,difficulty,marks,type
+example-numeric,questions/example-numeric.qmd,Calculate a total,Arithmetic,easy,1,numerical
+example-choice,questions/example-choice.qmd,Choose an R function,R basics,easy,1,singlechoice
+example-shortanswer,questions/example-shortanswer.qmd,Name the data frame verb,R basics,medium,2,shortanswer
+example-multichoice,questions/example-multichoice.qmd,Select data frame verbs,R basics,medium,2,multichoice

@@ -1,0 +1,9 @@
+^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$
+^build-quiz\.R$
+^README\.Rmd$
+^_pkgdown\.yml$
+^CONTRIBUTING\.md$
+^CODE_OF_CONDUCT\.md$
+^cran-comments\.md$

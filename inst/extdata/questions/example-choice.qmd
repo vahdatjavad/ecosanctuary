@@ -1,0 +1,14 @@
+## Choose an R function
+
+```{r example-choice-options, echo=FALSE}
+q_example_choice_options <- c("mean()", "plot()", "read.csv()")
+q_example_choice_answer <- "mean()"
+```
+
+Which function calculates an arithmetic mean?
+
+**Answer:** `r quiz_singlechoice(q_example_choice_answer, q_example_choice_options)`
+
+::: unilur-solution
+`mean()` calculates an arithmetic mean.
+:::

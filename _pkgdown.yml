@@ -1,0 +1,33 @@
+url: https://vahdatjavad.github.io/ecosanctuary/
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+
+reference:
+- title: Build and inspect banks
+  contents:
+  - build_quiz
+  - read_question_index
+  - create_question_index
+  - example_question_index
+- title: Validate and select
+  contents:
+  - validate_question_bank
+  - validate_question
+  - select_questions
+- title: Author question answers
+  contents:
+  - answer_helpers
+
+articles:
+- title: Guides
+  navbar: Guides
+  contents:
+  - getting-started
+  - authoring-question-banks
+  - rendering-and-moodle

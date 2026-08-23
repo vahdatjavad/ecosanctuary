@@ -1,0 +1,14 @@
+## Name the data frame verb
+
+```{r example-shortanswer-answer, echo=FALSE}
+q_example_shortanswer_answer <- "filter"
+```
+
+Which dplyr verb keeps rows that satisfy a condition? Give its name without
+parentheses.
+
+**Answer:** `r quiz_shortanswer(q_example_shortanswer_answer)`
+
+::: unilur-solution
+The `filter()` verb keeps rows that satisfy a condition.
+:::

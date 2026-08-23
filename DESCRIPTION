@@ -1,0 +1,32 @@
+Package: ecosanctuary
+Title: Build Reusable Quarto and Moodle Question Banks
+Version: 0.1.0
+Authors@R:
+    person("Javad", "Vahdat Atashgah",
+           email = "82263273+vahdatjavad@users.noreply.github.com",
+           role = c("aut", "cre"))
+Description: Tools for validating, selecting, assembling, and rendering
+    reusable question banks. Question metadata are stored in a portable comma
+    separated index, while questions are authored as Quarto or R Markdown
+    fragments. A single selection can be rendered as a Moodle quiz, a student
+    practice document, and a teacher answer key.
+License: MIT + file LICENSE
+URL: https://vahdatjavad.github.io/ecosanctuary/,
+    https://github.com/vahdatjavad/ecosanctuary
+BugReports: https://github.com/vahdatjavad/ecosanctuary/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    htmltools,
+    knitr,
+    yaml
+Suggests:
+    moodlequiz,
+    quarto,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
