@@ -1,0 +1,135 @@
+# Getting started with ecosanctuary
+
+## What belongs in the package?
+
+`ecosanctuary` owns the reusable mechanics: reading metadata, validating
+question fragments, selecting questions, producing wrappers, formatting
+answer controls, and rendering outputs. A question-bank project owns the
+teaching content: its index, question fragments, source notes, and
+generated products.
+
+Keeping these responsibilities separate means that one installed package
+can build many banks. Fixes to validation and rendering are made once in
+the package, rather than copied into every course repository.
+
+A bank normally looks like this:
+
+    my-question-bank/
+    ├── question-index.csv
+    ├── questions/
+    │   ├── easy/
+    │   │   └── arithmetic-01.qmd
+    │   └── medium/
+    │       └── joins-01.qmd
+    ├── build-quiz.R
+    ├── generated/             # created by build_quiz()
+    └── output/                # created by build_quiz()
+
+## Why the build asks for an index file
+
+The index file is the better primary input. A questions folder can tell
+the package which files exist, but it cannot reliably supply stable IDs,
+display titles, topics, difficulty, marks, or Moodle answer types.
+Encoding that information only in directory and file names makes
+reorganising a bank risky.
+
+The CSV is an explicit, reviewable contract. Each row connects a stable
+ID and metadata to one fragment. Paths are interpreted relative to the
+index, so the whole bank remains portable. The package still supports a
+folder-first start: \[create_question_index()\] scans existing fragments
+and writes a template that you complete once.
+
+## Install the package
+
+For ordinary use, install from GitHub:
+
+``` r
+
+remotes::install_github("vahdatjavad/ecosanctuary")
+```
+
+During package development, open `ecosanctuary.Rproj` and use:
+
+``` r
+
+devtools::document()
+devtools::test()
+devtools::check()
+devtools::install()
+```
+
+## Create or locate an index
+
+For an existing bank, keep the path explicit:
+
+``` r
+
+index_file <- "/path/to/my-question-bank/question-index.csv"
+```
+
+To bootstrap a bank from a folder:
+
+``` r
+
+create_question_index(
+  questions_dir = "/path/to/my-question-bank/questions",
+  output_file = "/path/to/my-question-bank/question-index.csv"
+)
+```
+
+Open the CSV and complete every blank metadata field. Then run:
+
+``` r
+
+library(ecosanctuary)
+validate_question_bank(index_file)
+```
+
+Validation is intentionally performed on the complete bank before any
+subset is selected. A broken unselected question therefore cannot remain
+hidden.
+
+## Build all or selected questions
+
+Build all questions in catalogue order:
+
+``` r
+
+build_quiz(index_file = index_file)
+```
+
+Build an explicit ordered selection:
+
+``` r
+
+build_quiz(
+  index_file = index_file,
+  ids = c("joins-03", "exploration-01")
+)
+```
+
+The order in `ids` becomes the question order in every output. For a
+random quiz, use `n` and `seed`; do not supply `ids` at the same time.
+
+During authoring, set `render = FALSE` for a fast structural build. This
+writes the wrappers and selection manifest but does not invoke Quarto,
+Pandoc, Moodle, or LaTeX.
+
+``` r
+
+build_quiz(index_file = index_file, render = FALSE)
+```
+
+## Use the interactive build script
+
+Copy `system.file("examples", "build-quiz.R", package = "ecosanctuary")`
+into your bank and edit its configuration. The repository-level
+`build-quiz.R` also demonstrates a file chooser: when sourced
+interactively, it asks for the index CSV. In non-interactive
+environments, set `ECOSANCTUARY_QUESTION_INDEX`.
+
+Continue with
+[`vignette("authoring-question-banks")`](https://vahdatjavad.github.io/ecosanctuary/articles/authoring-question-banks.md)
+before adding questions, then read
+[`vignette("rendering-and-moodle")`](https://vahdatjavad.github.io/ecosanctuary/articles/rendering-and-moodle.md)
+for build dependencies and import steps.
