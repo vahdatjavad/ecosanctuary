@@ -154,8 +154,9 @@ hidden.</p>
 <span>  ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"joins-03"</span>, <span class="st">"exploration-01"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The order in <code>ids</code> becomes the question order in every
-output. For a random quiz, use <code>n</code> and <code>seed</code>; do
-not supply <code>ids</code> at the same time.</p>
+output. For a topic-stratified random selection, use <code>n</code> and
+<code>seed</code>; do not supply <code>ids</code> at the same time. Set
+<code>shuffle = TRUE</code> to randomise the final question order.</p>
 <p>During authoring, set <code>render = FALSE</code> for a fast
 structural build. This writes the wrappers and selection manifest but
 does not invoke Quarto, Pandoc, Moodle, or LaTeX.</p>

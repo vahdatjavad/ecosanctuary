@@ -68,7 +68,9 @@ Relative output directories are also resolved from the index's folder.</p>
 <span>  replicates <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  generated_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  render <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  render <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  shuffle <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  toc <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">build_question_bank</span><span class="op">(</span></span>
@@ -83,7 +85,9 @@ Relative output directories are also resolved from the index's folder.</p>
 <span>  replicates <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  generated_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  render <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  render <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  shuffle <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  toc <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -106,15 +110,15 @@ rationale and <code><a href="create_question_index.html">create_question_index()
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>Optional random sample size. Do not combine with <code>ids</code>.</p></dd>
+<dd><p>Optional topic-stratified sample size. Do not combine with <code>ids</code>.</p></dd>
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>Optional seed for reproducible sampling.</p></dd>
+<dd><p>Optional seed for reproducible selection and shuffling.</p></dd>
 
 
 <dt id="arg-topics-difficulties">topics, difficulties<a class="anchor" aria-label="anchor" href="#arg-topics-difficulties"></a></dt>
-<dd><p>Optional filters applied before random sampling.</p></dd>
+<dd><p>Optional filters applied before sampling.</p></dd>
 
 
 <dt id="arg-category">category<a class="anchor" aria-label="anchor" href="#arg-category"></a></dt>
@@ -138,6 +142,17 @@ uses <code>generated</code> next to the index.</p></dd>
 <dt id="arg-render">render<a class="anchor" aria-label="anchor" href="#arg-render"></a></dt>
 <dd><p>If <code>FALSE</code>, create and validate sources without running
 Quarto, Pandoc, or LaTeX.</p></dd>
+
+
+<dt id="arg-shuffle">shuffle<a class="anchor" aria-label="anchor" href="#arg-shuffle"></a></dt>
+<dd><p>Whether to shuffle the selected question order. When <code>FALSE</code>,
+questions follow the supplied <code>ids</code> or <code>topics</code> order, or index order when
+neither is supplied.</p></dd>
+
+
+<dt id="arg-toc">toc<a class="anchor" aria-label="anchor" href="#arg-toc"></a></dt>
+<dd><p>Whether generated student and teacher HTML/PDF documents should
+include a table of contents.</p></dd>
 
 </dl></div>
     <div class="section level2">

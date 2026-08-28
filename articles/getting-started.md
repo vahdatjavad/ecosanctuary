@@ -109,7 +109,9 @@ build_quiz(
 ```
 
 The order in `ids` becomes the question order in every output. For a
-random quiz, use `n` and `seed`; do not supply `ids` at the same time.
+topic-stratified random selection, use `n` and `seed`; do not supply
+`ids` at the same time. Set `shuffle = TRUE` to randomise the final
+question order.
 
 During authoring, set `render = FALSE` for a fast structural build. This
 writes the wrappers and selection manifest but does not invoke Quarto,

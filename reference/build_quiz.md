@@ -21,7 +21,9 @@ build_quiz(
   replicates = 1,
   generated_dir = NULL,
   output_dir = NULL,
-  render = TRUE
+  render = TRUE,
+  shuffle = FALSE,
+  toc = TRUE
 )
 
 build_question_bank(
@@ -36,7 +38,9 @@ build_question_bank(
   replicates = 1,
   generated_dir = NULL,
   output_dir = NULL,
-  render = TRUE
+  render = TRUE,
+  shuffle = FALSE,
+  toc = TRUE
 )
 ```
 
@@ -61,15 +65,15 @@ build_question_bank(
 
 - n:
 
-  Optional random sample size. Do not combine with `ids`.
+  Optional topic-stratified sample size. Do not combine with `ids`.
 
 - seed:
 
-  Optional seed for reproducible sampling.
+  Optional seed for reproducible selection and shuffling.
 
 - topics, difficulties:
 
-  Optional filters applied before random sampling.
+  Optional filters applied before sampling.
 
 - category:
 
@@ -93,6 +97,17 @@ build_question_bank(
 
   If `FALSE`, create and validate sources without running Quarto,
   Pandoc, or LaTeX.
+
+- shuffle:
+
+  Whether to shuffle the selected question order. When `FALSE`,
+  questions follow the supplied `ids` or `topics` order, or index order
+  when neither is supplied.
+
+- toc:
+
+  Whether generated student and teacher HTML/PDF documents should
+  include a table of contents.
 
 ## Value
 

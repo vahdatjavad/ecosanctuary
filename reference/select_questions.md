@@ -1,7 +1,7 @@
 # Select questions from an index
 
 Select explicit IDs in a specified order, filter a bank, or take a
-reproducible random sample without replacement.
+reproducible topic-stratified sample without replacement.
 
 ## Usage
 
@@ -12,7 +12,8 @@ select_questions(
   n = NULL,
   seed = NULL,
   topics = NULL,
-  difficulties = NULL
+  difficulties = NULL,
+  shuffle = FALSE
 )
 
 quiz_select_questions(
@@ -21,7 +22,8 @@ quiz_select_questions(
   n = NULL,
   seed = NULL,
   topics = NULL,
-  difficulties = NULL
+  difficulties = NULL,
+  shuffle = FALSE
 )
 ```
 
@@ -34,20 +36,28 @@ quiz_select_questions(
 
 - ids:
 
-  Optional character vector of question IDs. When supplied, their order
-  determines the output order.
+  Optional character vector of question IDs. When supplied with
+  `shuffle = FALSE`, their order determines the output order.
 
 - n:
 
-  Optional positive integer sample size.
+  Optional positive integer sample size. Sampling is balanced across the
+  eligible topics as evenly as their available questions allow.
 
 - seed:
 
-  Optional random seed used when `n` is supplied.
+  Optional random seed used for sampling or shuffling filtered
+  questions.
 
 - topics, difficulties:
 
   Optional values used to filter the sampling pool.
+
+- shuffle:
+
+  Whether to shuffle the selected question order. When `FALSE`, explicit
+  IDs retain their supplied order, supplied topics retain their supplied
+  order, and otherwise index order is retained.
 
 ## Value
 

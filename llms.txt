@@ -64,9 +64,17 @@ build_quiz(
   n = 10,
   seed = 2026,
   topics = c("Data exploration", "Joins"),
-  difficulties = c("easy", "medium")
+  difficulties = c("easy", "medium"),
+  shuffle = FALSE,
+  toc = FALSE
 )
 ```
+
+Sampling is stratified by topic, so the selected questions are spread as
+evenly as possible across the eligible topics. With `shuffle = FALSE`,
+topics appear in the order supplied to `topics`; set `shuffle = TRUE` to
+randomise the final question order. Use `toc = FALSE` to omit the table
+of contents from the student and teacher documents.
 
 By default, generated sources go to `generated/` and completed products
 to `output/`, both next to the index file.

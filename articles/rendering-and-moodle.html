@@ -102,18 +102,27 @@ rejected.</p>
 <span>  n <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">2026</span>,</span>
 <span>  topics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Wrangling"</span>, <span class="st">"Visualisation"</span><span class="op">)</span>,</span>
-<span>  difficulties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"easy"</span>, <span class="st">"medium"</span><span class="op">)</span></span>
+<span>  difficulties <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"easy"</span>, <span class="st">"medium"</span><span class="op">)</span>,</span>
+<span>  shuffle <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Sampling is without replacement. A local seed makes the selection
-reproducible without changing the caller’s random-number state. Filters
-limit the pool before sampling. If <code>n</code> is omitted, all
-matching rows remain in index order.</p>
+<p>Sampling is without replacement and stratified by topic. The
+allocation is as even as topic capacities allow; if one topic has too
+few questions, its unused slots are redistributed across the other
+topics. A local seed makes selection reproducible without changing the
+caller’s random-number state. Filters limit the pool before
+sampling.</p>
+<p>With <code>shuffle = FALSE</code> (the default), topics appear in the
+order supplied to <code>topics</code>, and questions within each topic
+retain index order. If <code>topics</code> is omitted, all selected
+questions retain index order. Set <code>shuffle = TRUE</code> to
+randomise the final question order.</p>
 </div>
 <div class="section level2">
 <h2 id="build-products">Build products<a class="anchor" aria-label="anchor" href="#build-products"></a>
 </h2>
 <p>The default build writes:</p>
 <pre><code>generated/
+├── _quarto.yml
 ├── quiz-moodle.Rmd
 ├── quiz-student.qmd
 └── quiz-teacher.qmd
@@ -130,6 +139,17 @@ controls. The teacher documents retain worked solutions and display
 correct answers. The HTML controls are for local practice only; they do
 not submit or store answers. The Moodle XML is the gradable
 artifact.</p>
+<p>When <code>generated/</code> does not already contain a
+<code>_quarto.yml</code>, the build creates one that makes it an
+isolated default Quarto project. This prevents a surrounding website,
+book, or other parent Quarto project from contributing its files or
+resources to the quiz output. An existing <code>_quarto.yml</code> is
+preserved.</p>
+<p>Student and teacher HTML/PDF documents include a table of contents by
+default. To omit it from their generated <code>.qmd</code> wrappers and
+rendered outputs, use:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/build_quiz.html">build_quiz</a></span><span class="op">(</span>index_file <span class="op">=</span> <span class="va">index_file</span>, toc <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>The manifest records question number, ID, path, title, topic,
 difficulty, marks, type, and any extra index columns. Keep it with a
 delivered assessment so the selection can be audited later.</p>
@@ -162,7 +182,7 @@ teaching review.</p>
 <p>Pass <code>category</code> to choose the category metadata sent to
 <code>moodlequiz</code>. Pass a positive integer <code>replicates</code>
 to request generated variants supported by that package:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/build_quiz.html">build_quiz</a></span><span class="op">(</span></span>
 <span>  index_file <span class="op">=</span> <span class="va">index_file</span>,</span>
 <span>  category <span class="op">=</span> <span class="st">"STAT101 / Week 4"</span>,</span>
