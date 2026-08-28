@@ -17,7 +17,9 @@ build_quiz(
   replicates = 1,
   generated_dir = NULL,
   output_dir = NULL,
-  render = TRUE
+  render = TRUE,
+  shuffle = FALSE,
+  toc = TRUE
 )
 
 build_question_bank(
@@ -32,7 +34,9 @@ build_question_bank(
   replicates = 1,
   generated_dir = NULL,
   output_dir = NULL,
-  render = TRUE
+  render = TRUE,
+  shuffle = FALSE,
+  toc = TRUE
 )
 }
 \arguments{
@@ -44,11 +48,11 @@ rationale and \code{\link[=create_question_index]{create_question_index()}} for 
 
 \item{ids}{Optional ordered vector of question IDs.}
 
-\item{n}{Optional random sample size. Do not combine with \code{ids}.}
+\item{n}{Optional topic-stratified sample size. Do not combine with \code{ids}.}
 
-\item{seed}{Optional seed for reproducible sampling.}
+\item{seed}{Optional seed for reproducible selection and shuffling.}
 
-\item{topics, difficulties}{Optional filters applied before random sampling.}
+\item{topics, difficulties}{Optional filters applied before sampling.}
 
 \item{category}{Moodle question-bank category.}
 
@@ -62,6 +66,13 @@ uses \code{generated} next to the index.}
 
 \item{render}{If \code{FALSE}, create and validate sources without running
 Quarto, Pandoc, or LaTeX.}
+
+\item{shuffle}{Whether to shuffle the selected question order. When \code{FALSE},
+questions follow the supplied \code{ids} or \code{topics} order, or index order when
+neither is supplied.}
+
+\item{toc}{Whether generated student and teacher HTML/PDF documents should
+include a table of contents.}
 }
 \value{
 Invisibly, the selected rows of the question index.

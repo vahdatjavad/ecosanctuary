@@ -51,13 +51,21 @@ build_quiz(
   n = 12,
   seed = 2026,
   topics = c("Wrangling", "Visualisation"),
-  difficulties = c("easy", "medium")
+  difficulties = c("easy", "medium"),
+  shuffle = FALSE
 )
 ```
 
-Sampling is without replacement. A local seed makes the selection reproducible
-without changing the caller's random-number state. Filters limit the pool
-before sampling. If `n` is omitted, all matching rows remain in index order.
+Sampling is without replacement and stratified by topic. The allocation is as
+even as topic capacities allow; if one topic has too few questions, its unused
+slots are redistributed across the other topics. A local seed makes selection
+reproducible without changing the caller's random-number state. Filters limit
+the pool before sampling.
+
+With `shuffle = FALSE` (the default), topics appear in the order supplied to
+`topics`, and questions within each topic retain index order. If `topics` is
+omitted, all selected questions retain index order. Set `shuffle = TRUE` to
+randomise the final question order.
 
 ## Build products
 
@@ -65,6 +73,7 @@ The default build writes:
 
 ```
 generated/
+├── _quarto.yml
 ├── quiz-moodle.Rmd
 ├── quiz-student.qmd
 └── quiz-teacher.qmd
@@ -82,6 +91,18 @@ The student documents omit solution blocks and show blank answer controls. The
 teacher documents retain worked solutions and display correct answers. The
 HTML controls are for local practice only; they do not submit or store answers.
 The Moodle XML is the gradable artifact.
+
+When `generated/` does not already contain a `_quarto.yml`, the build creates
+one that makes it an isolated default Quarto project. This prevents a
+surrounding website, book, or other parent Quarto project from contributing its
+files or resources to the quiz output. An existing `_quarto.yml` is preserved.
+
+Student and teacher HTML/PDF documents include a table of contents by default.
+To omit it from their generated `.qmd` wrappers and rendered outputs, use:
+
+```{r eval = FALSE}
+build_quiz(index_file = index_file, toc = FALSE)
+```
 
 The manifest records question number, ID, path, title, topic, difficulty,
 marks, type, and any extra index columns. Keep it with a delivered assessment

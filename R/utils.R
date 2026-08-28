@@ -9,6 +9,13 @@
   invisible(x)
 }
 
+.check_flag <- function(x, name) {
+  if (!is.logical(x) || length(x) != 1L || is.na(x)) {
+    .quiz_abort("`", name, "` must be `TRUE` or `FALSE`.")
+  }
+  invisible(x)
+}
+
 .is_absolute_path <- function(path) {
   grepl("^(/|[A-Za-z]:[/\\\\]|\\\\\\\\)", path)
 }

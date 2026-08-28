@@ -68,6 +68,19 @@
   invisible(path)
 }
 
+.quiz_write_quarto_project <- function(generated_dir) {
+  path <- file.path(generated_dir, "_quarto.yml")
+  if (file.exists(path)) return(invisible(path))
+  metadata <- list(
+    project = list(
+      type = "default",
+      render = c("quiz-student.qmd", "quiz-teacher.qmd")
+    )
+  )
+  yaml::write_yaml(metadata, path)
+  invisible(path)
+}
+
 .quiz_configure_pandoc <- function() {
   if (rmarkdown::pandoc_available()) return(invisible(TRUE))
   quarto_bin <- Sys.which("quarto")
@@ -114,9 +127,14 @@
 #'   rationale and [create_question_index()] for folder-based setup.
 #' @param title Quiz title.
 #' @param ids Optional ordered vector of question IDs.
-#' @param n Optional random sample size. Do not combine with `ids`.
-#' @param seed Optional seed for reproducible sampling.
-#' @param topics,difficulties Optional filters applied before random sampling.
+#' @param n Optional topic-stratified sample size. Do not combine with `ids`.
+#' @param seed Optional seed for reproducible selection and shuffling.
+#' @param topics,difficulties Optional filters applied before sampling.
+#' @param shuffle Whether to shuffle the selected question order. When `FALSE`,
+#'   questions follow the supplied `ids` or `topics` order, or index order when
+#'   neither is supplied.
+#' @param toc Whether generated student and teacher HTML/PDF documents should
+#'   include a table of contents.
 #' @param category Moodle question-bank category.
 #' @param replicates Number of Moodle variants requested from `moodlequiz`.
 #' @param generated_dir Folder for generated `.qmd` and `.Rmd` wrappers. `NULL`
@@ -144,10 +162,13 @@ build_quiz <- function(index_file, title = "Question Bank Quiz", ids = NULL,
                        n = NULL, seed = NULL, topics = NULL,
                        difficulties = NULL, category = "Question bank",
                        replicates = 1, generated_dir = NULL,
-                       output_dir = NULL, render = TRUE) {
+                       output_dir = NULL, render = TRUE, shuffle = FALSE,
+                       toc = TRUE) {
   .check_scalar_string(index_file, "index_file")
   .check_scalar_string(title, "title")
   .check_scalar_string(category, "category")
+  .check_flag(shuffle, "shuffle")
+  .check_flag(toc, "toc")
   if (length(replicates) != 1L || is.na(replicates) ||
       !is.numeric(replicates) || replicates < 1 ||
       replicates != as.integer(replicates)) {
@@ -156,7 +177,15 @@ build_quiz <- function(index_file, title = "Question Bank Quiz", ids = NULL,
 
   index_file <- normalizePath(index_file, winslash = "/", mustWork = TRUE)
   index <- validate_question_bank(index_file)
-  selected <- select_questions(index, ids, n, seed, topics, difficulties)
+  selected <- select_questions(
+    index = index,
+    ids = ids,
+    n = n,
+    seed = seed,
+    topics = topics,
+    difficulties = difficulties,
+    shuffle = shuffle
+  )
   project_root <- dirname(index_file)
   generated_dir <- .project_output_path(
     generated_dir, project_root, "generated"
@@ -219,14 +248,14 @@ build_quiz <- function(index_file, title = "Question Bank Quiz", ids = NULL,
         html = list(
           theme = "cosmo",
           css = css_file,
-          toc = TRUE,
+          toc = toc,
           "toc-depth" = 2,
           "smooth-scroll" = TRUE,
           "embed-resources" = TRUE
         ),
         pdf = list(
           documentclass = "article",
-          toc = TRUE,
+          toc = toc,
           geometry = "margin=2.2cm"
         )
       )
@@ -253,6 +282,7 @@ build_quiz <- function(index_file, title = "Question Bank Quiz", ids = NULL,
     .quiz_setup_chunk("teacher"),
     c(document_intro("teacher"), unlist(teacher_questions, use.names = FALSE))
   )
+  .quiz_write_quarto_project(generated_dir)
   manifest <- cbind(question_number = question_numbers, selected)
   utils::write.csv(
     manifest,

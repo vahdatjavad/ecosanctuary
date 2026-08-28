@@ -39,5 +39,7 @@ ecosanctuary::build_quiz(
   difficulties = NULL,
   category = "Question bank",
   replicates = 1,
+  shuffle = FALSE,
+  toc = TRUE,
   render = TRUE
 )

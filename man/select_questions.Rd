@@ -11,7 +11,8 @@ select_questions(
   n = NULL,
   seed = NULL,
   topics = NULL,
-  difficulties = NULL
+  difficulties = NULL,
+  shuffle = FALSE
 )
 
 quiz_select_questions(
@@ -20,27 +21,34 @@ quiz_select_questions(
   n = NULL,
   seed = NULL,
   topics = NULL,
-  difficulties = NULL
+  difficulties = NULL,
+  shuffle = FALSE
 )
 }
 \arguments{
 \item{index}{A data frame returned by \code{\link[=read_question_index]{read_question_index()}}.}
 
-\item{ids}{Optional character vector of question IDs. When supplied, their
-order determines the output order.}
+\item{ids}{Optional character vector of question IDs. When supplied with
+\code{shuffle = FALSE}, their order determines the output order.}
 
-\item{n}{Optional positive integer sample size.}
+\item{n}{Optional positive integer sample size. Sampling is balanced across
+the eligible topics as evenly as their available questions allow.}
 
-\item{seed}{Optional random seed used when \code{n} is supplied.}
+\item{seed}{Optional random seed used for sampling or shuffling filtered
+questions.}
 
 \item{topics, difficulties}{Optional values used to filter the sampling pool.}
+
+\item{shuffle}{Whether to shuffle the selected question order. When \code{FALSE},
+explicit IDs retain their supplied order, supplied topics retain their
+supplied order, and otherwise index order is retained.}
 }
 \value{
 A data frame containing the selected rows.
 }
 \description{
 Select explicit IDs in a specified order, filter a bank, or take a
-reproducible random sample without replacement.
+reproducible topic-stratified sample without replacement.
 }
 \examples{
 index <- read_question_index(example_question_index())

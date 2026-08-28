@@ -13,5 +13,7 @@ ecosanctuary::build_quiz(
   topics = NULL,
   difficulties = NULL,
   category = "My course question bank",
-  replicates = 1
+  replicates = 1,
+  shuffle = FALSE,
+  toc = TRUE
 )
